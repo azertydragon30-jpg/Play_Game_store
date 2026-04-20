@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Cyber Runner X</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: #050510;
+        font-family: Arial, sans-serif;
+        color: white;
+    }
+
+    canvas {
+        display: block;
+        background: linear-gradient(180deg, #0ff2, #000);
+    }
+
+    #score {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        font-size: 22px;
+        font-weight: bold;
+        text-shadow: 0 0 10px #0ff;
+    }
+
+    #gameOver {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 40px;
+        text-align: center;
+        display: none;
+        text-shadow: 0 0 15px #f0f;
+    }
+
+    #retry {
+        margin-top: 20px;
+        padding: 12px 25px;
+        background: #0ff;
+        color: #000;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 0 15px #0ff;
+    }
+</style>
+</head>
+
+<body>
+
+<div id="score">Score : 0</div>
+
+<div id="gameOver">
+    <div>GAME OVER</div>
+    <button id="retry">Rejouer</button>
+</div>
+
+<canvas id="game"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Joueur
+let player = {
+    x: canvas.width / 2 - 25,
+    y: canvas.height - 120,
+    width: 50,
+    height: 50,
+    speed: 8,
+    color: "#0ff"
+};
+
+// Obstacles
+let obstacles = [];
+let obstacleSpeed = 6;
+let spawnRate = 60;
+let frame = 0;
+
+// Score
+let score = 0;
+let gameOver = false;
+
+// Contrôles
+let left = false;
+let right = false;
+
+document.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft") left = true;
+    if (e.key === "ArrowRight") right = true;
+});
+
+document.addEventListener("keyup", e => {
+    if (e.key === "ArrowLeft") left = false;
+    if (e.key === "ArrowRight") right = false;
+});
+
+// Création obstacles
+function spawnObstacle() {
+    let size = Math.random() * 80 + 40;
+    let x = Math.random() * (canvas.width - size);
+    obstacles.push({
+        x: x,
+        y: -size,
+        width: size,
+        height: size,
+        color: "#f0f"
+    });
+}
+
+// Collision
+function isColliding(a, b) {
+    return (
+        a.x < b.x + b.width &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.height &&
+        a.y + a.height > b.y
+    );
+}
+
+// Boucle du jeu
+function update() {
+    if (gameOver) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Déplacement joueur
+    if (left && player.x > 0) player.x -= player.speed;
+    if (right && player.x + player.width < canvas.width) player.x += player.speed;
+
+    // Dessin joueur
+    ctx.fillStyle = player.color;
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "#0ff";
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+
+    // Obstacles
+    if (frame % spawnRate === 0) spawnObstacle();
+
+    obstacles.forEach((obs, i) => {
+        obs.y += obstacleSpeed;
+
+        ctx.fillStyle = obs.color;
+        ctx.shadowColor = "#f0f";
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+
+        if (isColliding(player, obs)) {
+            endGame();
+        }
+
+        if (obs.y > canvas.height) {
+            obstacles.splice(i, 1);
+            score++;
+            document.getElementById("score").innerText = "Score : " + score;
+        }
+    });
+
+    // Difficulté progressive
+    obstacleSpeed += 0.002;
+    if (spawnRate > 20) spawnRate -= 0.01;
+
+    frame++;
+    requestAnimationFrame(update);
+}
+
+function endGame() {
+    gameOver = true;
+    document.getElementById("gameOver").style.display = "block";
+}
+
+document.getElementById("retry").onclick = () => {
+    location.reload();
+};
+
+update();
+</script>
+
+</body>
+</html>
