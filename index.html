@@ -2,26 +2,653 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>NovaArcadeX - Accueil</title>
-    <link rel="stylesheet" href="style.css">
+    <title>NovaArcadeX - Portail Neon</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Police futuriste -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #050510;
+            --accent: #00f5ff;
+            --accent2: #ff00ff;
+            --text: #f5f5ff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top, #101030 0%, #050510 45%, #000 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Fond animé */
+        .background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -2;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            background: radial-gradient(circle, var(--accent), transparent 60%);
+            animation: floatOrb 18s infinite alternate ease-in-out;
+        }
+
+        .gradient-orb.orb2 {
+            background: radial-gradient(circle, var(--accent2), transparent 60%);
+            animation-duration: 22s;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(-10%, 10%); }
+            50% { transform: translate(60%, -20%); }
+            100% { transform: translate(10%, 40%); }
+        }
+
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0.04) 1px,
+                transparent 1px
+            );
+            background-size: 100% 3px;
+            mix-blend-mode: soft-light;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 18px 8vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(18px);
+            background: linear-gradient(to bottom, rgba(5,5,16,0.9), transparent);
+            border-bottom: 1px solid rgba(0,245,255,0.25);
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 18px rgba(0,245,255,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            color: var(--accent);
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.18em;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        nav a {
+            margin-left: 24px;
+            text-decoration: none;
+            color: #cfd3ff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            position: relative;
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            transition: width 0.25s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Section hero */
+        .hero {
+            min-height: 100vh;
+            padding: 0 8vw;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+        }
+
+        .hero-left {
+            max-width: 520px;
+            animation: fadeInUp 1.4s ease forwards;
+            opacity: 0;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(0,245,255,0.5);
+            background: rgba(5,5,16,0.7);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: #9befff;
+            margin-bottom: 18px;
+        }
+
+        .hero-tag-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px rgba(0,245,255,0.9);
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(32px, 4vw, 46px);
+            line-height: 1.1;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: #c3c6ff;
+            max-width: 460px;
+            margin-bottom: 26px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .btn-primary {
+            padding: 12px 26px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            background: linear-gradient(120deg, var(--accent), var(--accent2));
+            color: #050510;
+            font-weight: 700;
+            box-shadow: 0 0 18px rgba(0,245,255,0.7);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 26px rgba(0,245,255,0.9);
+        }
+
+        .btn-ghost {
+            padding: 12px 22px;
+            border-radius: 999px;
+            border: 1px solid rgba(207,211,255,0.4);
+            background: rgba(5,5,16,0.7);
+            color: #e0e3ff;
+            cursor: pointer;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-ghost span {
+            font-size: 18px;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            font-size: 12px;
+            color: #9ea3ff;
+        }
+
+        .hero-meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-meta-label {
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 10px;
+            color: #6f74c9;
+        }
+
+        .hero-meta-value {
+            font-size: 13px;
+        }
+
+        /* Visuel de droite */
+        .hero-right {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInUp 1.6s ease forwards;
+            opacity: 0;
+        }
+
+        .card {
+            position: relative;
+            width: min(420px, 90vw);
+            aspect-ratio: 4 / 5;
+            border-radius: 26px;
+            padding: 18px 18px 20px;
+            background: radial-gradient(circle at top, #181830 0%, #050510 55%, #000 100%);
+            border: 1px solid rgba(0,245,255,0.35);
+            box-shadow:
+                0 0 40px rgba(0,245,255,0.35),
+                0 0 80px rgba(255,0,255,0.25);
+            overflow: hidden;
+        }
+
+        .card-glow {
+            position: absolute;
+            inset: -40%;
+            background: conic-gradient(
+                from 180deg,
+                rgba(0,245,255,0.1),
+                transparent,
+                rgba(255,0,255,0.18),
+                transparent,
+                rgba(0,245,255,0.1)
+            );
+            mix-blend-mode: screen;
+            opacity: 0.7;
+            animation: rotateGlow 18s linear infinite;
+        }
+
+        @keyframes rotateGlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 22px;
+            padding: 18px;
+            background: radial-gradient(circle at top, #25254a 0%, #050510 55%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #cfd3ff;
+        }
+
+        .card-chip {
+            width: 40px;
+            height: 26px;
+            border-radius: 8px;
+            border: 1px solid rgba(0,245,255,0.6);
+            background: linear-gradient(135deg, rgba(0,245,255,0.2), transparent);
+        }
+
+        .card-title {
+            margin-top: 18px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+        }
+
+        .card-sub {
+            font-size: 12px;
+            color: #aeb3ff;
+            margin-bottom: 16px;
+        }
+
+        .card-center {
+            flex: 1;
+            border-radius: 18px;
+            border: 1px solid rgba(0,245,255,0.3);
+            background: radial-gradient(circle at center, #1a1a3a 0%, #050510 70%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-center::before {
+            content: "";
+            position: absolute;
+            width: 140%;
+            height: 140%;
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(0,245,255,0.25), transparent 55%),
+                radial-gradient(circle at 80% 80%, rgba(255,0,255,0.25), transparent 55%);
+            opacity: 0.9;
+            animation: pulseGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .card-ship {
+            position: relative;
+            width: 70%;
+            max-width: 260px;
+            aspect-ratio: 16 / 9;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: radial-gradient(circle at top, #3cf 0%, #111 60%);
+            box-shadow: 0 0 30px rgba(0,245,255,0.6);
+            overflow: hidden;
+        }
+
+        .card-ship::after {
+            content: "NEON STRIKE";
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .card-footer {
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #aeb3ff;
+        }
+
+        .card-footer span {
+            display: block;
+        }
+
+        .card-footer-label {
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            font-size: 9px;
+            color: #6f74c9;
+        }
+
+        .card-footer-value {
+            font-size: 12px;
+        }
+
+        /* Section features */
+        .features {
+            padding: 40px 8vw 60px;
+            margin-top: -40px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+        }
+
+        .feature {
+            border-radius: 18px;
+            padding: 16px 18px;
+            background: rgba(5,5,16,0.9);
+            border: 1px solid rgba(0,245,255,0.25);
+            backdrop-filter: blur(14px);
+            font-size: 13px;
+        }
+
+        .feature-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            margin-bottom: 8px;
+            color: #e0e3ff;
+        }
+
+        .feature p {
+            color: #b7bbff;
+            font-size: 12px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero {
+                flex-direction: column;
+                padding-top: 110px;
+                text-align: center;
+            }
+
+            .hero-left {
+                align-items: center;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .hero-subtitle {
+                max-width: none;
+            }
+
+            .hero-meta {
+                justify-content: center;
+            }
+
+            header {
+                padding: 14px 6vw;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .features {
+                margin-top: 0;
+            }
+        }
+    </style>
 </head>
 <body>
 
+<div class="background">
+    <div class="gradient-orb" style="top:-10%; left:-10%;"></div>
+    <div class="gradient-orb orb2" style="bottom:-20%; right:-10%;"></div>
+</div>
+<div class="scanlines"></div>
+
 <header>
-    <h1>NovaArcadeX</h1>
+    <div class="logo">
+        <div class="logo-icon">NX</div>
+        <div class="logo-text">NovaArcadeX</div>
+    </div>
     <nav>
-        <a href="index.html">Accueil</a>
-        <a href="games.html">Jeux</a>
-        <a href="shop.html">Boutique</a>
-        <a href="contact.html">Contact</a>
+        <a href="#top">Accueil</a>
+        <a href="#features">Univers</a>
+        <a href="https://lecybercreateur.github.io/Neon-Strike.html/">Jouer</a>
     </nav>
 </header>
 
-<section class="hero">
-    <h2>Bienvenue sur NovaArcadeX</h2>
-    <p>Plonge dans l’univers futuriste de Neon Strike et d’autres jeux exclusifs.</p>
-    <a class="btn" href="games.html">Découvrir les jeux</a>
-</section>
+<main id="top">
+    <section class="hero">
+        <div class="hero-left">
+            <div class="hero-tag">
+                <div class="hero-tag-dot"></div>
+                <span>Portail d’accès Neon</span>
+            </div>
+
+            <h1 class="hero-title">
+                Entre dans le <span>NovaArcadeX</span><br>
+                et déclenche Neon Strike.
+            </h1>
+
+            <p class="hero-subtitle">
+                Un hub futuriste dédié à ton shooter néon.  
+                Prépare-toi à traverser un couloir de lumière, à esquiver les rafales et à gravir les rangs de l’arcade numérique.
+            </p>
+
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="location.href='https://lecybercreateur.github.io/Neon-Strike.html/';">
+                    Lancer Neon Strike
+                </button>
+                <button class="btn-ghost" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'});">
+                    <span>▼</span> Découvrir l’univers
+                </button>
+            </div>
+
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <span class="hero-meta-label">Mode</span>
+                    <span class="hero-meta-value">Arcade futuriste</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="hero-meta-label">Difficulté</span>
+                    <span class="hero-meta-value">Réactive & nerveuse</span>
+                </div>
+                <div class="hero-meta-item">
+                    <span class="hero-meta-label">Plateforme</span>
+                    <span class="hero-meta-value">Navigateur web</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="card">
+                <div class="card-glow"></div>
+                <div class="card-inner">
+                    <div>
+                        <div class="card-header">
+                            <span>Session NovaArcadeX</span>
+                            <div class="card-chip"></div>
+                        </div>
+                        <div class="card-title">Neon Strike</div>
+                        <div class="card-sub">Instance de combat – Corridor lumineux</div>
+                    </div>
+
+                    <div class="card-center">
+                        <div class="card-ship"></div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div>
+                            <span class="card-footer-label">Statut</span>
+                            <span class="card-footer-value">Portail prêt</span>
+                        </div>
+                        <div>
+                            <span class="card-footer-label">Réaction</span>
+                            <span class="card-footer-value">Temps réel</span>
+                        </div>
+                        <div>
+                            <span class="card-footer-label">Entrée</span>
+                            <span class="card-footer-value">Clavier / Souris</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-title">Ambiance néon</div>
+                <p>
+                    NovaArcadeX est pensé comme un sas de décompression avant le combat : lumières froides, halos colorés,
+                    vibrations numériques. Tu n’ouvres pas juste un jeu, tu entres dans un couloir d’énergie.
+                </p>
+            </div>
+            <div class="feature">
+                <div class="feature-title">Accès instantané</div>
+                <p>
+                    Un clic sur <b>Lancer Neon Strike</b> et tu es propulsé dans l’action.  
+                    Pas d’installation, pas d’attente : ton navigateur devient ton cockpit.
+                </p>
+            </div>
+            <div class="feature">
+                <div class="feature-title">Univers évolutif</div>
+                <p>
+                    NovaArcadeX peut accueillir d’autres expériences : nouveaux modes, nouveaux jeux, classements, profils joueurs.
+                    C’est ton hub, ta base, ton arcade personnelle.
+                </p>
+            </div>
+            <div class="feature">
+                <div class="feature-title">Signature Dragon</div>
+                <p>
+                    Chaque détail visuel peut être ajusté : couleurs, intensité du glow, textes, liens.  
+                    NovaArcadeX est ton portail, ta marque, ton style.
+                </p>
+            </div>
+        </div>
+    </section>
+</main>
 
 </body>
 </html>
