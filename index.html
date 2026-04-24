@@ -3,120 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Game Store | Accueil</title>
+    <title>Play Game Store | Gaming Hub</title>
     <style>
         /* RESET & BASE */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #0d0d1a; color: #fff; overflow-x: hidden; scroll-behavior: smooth; }
 
-        /* EFFETS DE LUMIÈRE NÉON */
+        /* EFFETS NÉON */
         .neon-text {
             color: #fff;
-            text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #0fa, 0 0 82px #0fa, 0 0 92px #0fa;
+            text-shadow: 0 0 7px #fff, 0 0 21px #0fa;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
         header {
-            height: 20vh;
+            height: 15vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             border-bottom: 2px solid #0fa;
-            box-shadow: 0 0 15px #0fa;
-            background: linear-gradient(to bottom, #1a1a2e, #0d0d1a);
+            background: #1a1a2e;
         }
 
-        /* SECTION ACCUEIL */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 20px;
         }
 
-        h2 {
-            margin-bottom: 30px;
-            color: #f0f;
-            text-shadow: 0 0 10px #f0f;
-            font-size: 2rem;
+        /* ZONE DE JEU PRINCIPALE (L'ÉCRAN DE JEU) */
+        #game-viewport {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: #000;
+            border: 4px solid #0fa;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 170, 0.3);
+            display: none; /* Caché par défaut jusqu'au clic */
         }
+
+        iframe, canvas {
+            width: 100%;
+            height: 500px;
+            border: none;
+            display: block;
+        }
+
+        .game-controls {
+            background: #16213e;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #0fa;
+        }
+
+        /* BOUTON PLEIN ÉCRAN */
+        .fullscreen-btn {
+            background: #f0f;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .fullscreen-btn:hover { background: #fff; color: #f0f; }
 
         /* GRILLE DES JEUX */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 50px;
+            gap: 20px;
+            margin-top: 30px;
         }
 
         .game-card {
             background: #16213e;
-            border: 2px solid #0fa;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 0 25px #0fa;
-        }
-
-        .game-card h3 {
-            margin: 15px 0;
-            color: #fff;
-        }
-
-        .game-thumb {
-            width: 100%;
-            height: 150px;
-            background: #000;
+            border: 2px solid #333;
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            border: 1px solid #333;
+            padding: 15px;
+            text-align: center;
+            transition: 0.3s;
         }
 
-        /* SECTION CLASSEMENT (Placeholder) */
-        .leaderboard-preview {
-            background: rgba(255, 0, 255, 0.05);
-            border: 1px dashed #f0f;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        footer {
-            margin-top: 50px;
-            padding: 40px;
-            text-align: center;
-            border-top: 1px solid #333;
-            color: #555;
-        }
+        .game-card:hover { border-color: #0fa; transform: scale(1.02); }
 
         .btn-play {
             display: inline-block;
             margin-top: 10px;
-            padding: 10px 20px;
+            padding: 8px 20px;
             background: #0fa;
             color: #000;
             text-decoration: none;
             font-weight: bold;
             border-radius: 5px;
-            transition: 0.3s;
+            cursor: pointer;
         }
 
-        .btn-play:hover {
-            background: #fff;
-            box-shadow: 0 0 10px #fff;
-        }
+        footer { text-align: center; padding: 40px; color: #555; }
     </style>
 </head>
 <body>
@@ -127,40 +117,30 @@
     </header>
 
     <main class="container">
-        
-        <section id="trending">
-            <h2>🔥 Jeux du moment</h2>
-            <div class="games-grid">
-                <div class="game-card">
-                    <div class="game-thumb">⚡</div>
-                    <h3>Neon Strike</h3>
-                    <p>Défiez les lois de la physique avec ce hit !</p>
-                    <a href="https://cybercreateur.github.io/Neon-Strike.html/" target="_blank" class="btn-play">JOUER</a>
-                </div>
 
-                <div class="game-card">
-                    <div class="game-thumb">🐍</div>
-                    <h3>Cyber Snake</h3>
-                    <p>Le classique revisité. (En développement)</p>
-                    <a href="#" class="btn-play" style="background: #444; cursor: not-allowed;">BIENTÔT</a>
+        <section id="game-viewport">
+            <div id="game-content">
                 </div>
-
-                <div class="game-card">
-                    <div class="game-thumb">🕹️</div>
-                    <h3>Prochain Jeu</h3>
-                    <p>Une nouvelle expérience arrive...</p>
-                    <a href="#" class="btn-play" style="background: #444; cursor: not-allowed;">BIENTÔT</a>
-                </div>
+            <div class="game-controls">
+                <span id="current-game-title">Sélectionnez un jeu</span>
+                <button class="fullscreen-btn" onclick="toggleFullScreen()">PLEIN ÉCRAN ⛶</button>
             </div>
         </section>
 
-        <section id="leaderboard">
-            <h2>🏆 Classement Mondial</h2>
-            <div class="leaderboard-preview">
-                <p>Le système de classement sera bientôt disponible...</p>
-                <p style="font-size: 0.9rem; margin-top: 10px; color: #aaa;">Préparez-vous à affronter les meilleurs joueurs !</p>
+        <h2>🔥 Jeux du moment</h2>
+        <div class="games-grid">
+            <div class="game-card">
+                <h3>Neon Strike</h3>
+                <p>Par CyberCreateur</p>
+                <div class="btn-play" onclick="loadGame('https://lecybercreateur.github.io/Neon-Strike.html/', 'Neon Strike', true)">LANCER</div>
             </div>
-        </section>
+
+            <div class="game-card">
+                <h3>Cyber Snake</h3>
+                <p>Action Rapide</p>
+                <div class="btn-play" onclick="loadGame('snake', 'Cyber Snake', false)">LANCER</div>
+            </div>
+        </div>
 
     </main>
 
@@ -168,5 +148,70 @@
         &copy; 2026 Play Game Store - Tous droits réservés.
     </footer>
 
+    <script>
+        const viewport = document.getElementById('game-viewport');
+        const gameContent = document.getElementById('game-content');
+        const gameTitle = document.getElementById('current-game-title');
+
+        function loadGame(url, title, isExternal) {
+            viewport.style.display = 'block';
+            gameTitle.innerText = title;
+            window.scrollTo(0, viewport.offsetTop - 20);
+
+            if (isExternal) {
+                // Charge le jeu externe dans une iframe
+                gameContent.innerHTML = `<iframe src="${url}" id="game-frame"></iframe>`;
+            } else if (url === 'snake') {
+                // Charge ton code Snake local
+                gameContent.innerHTML = `<canvas id="snakeCanvas" width="400" height="400"></canvas>`;
+                startSnake();
+            }
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                viewport.requestFullscreen().catch(err => {
+                    alert(`Erreur plein écran: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // LOGIQUE DU SERPENT (simplifiée pour l'intégration)
+        function startSnake() {
+            const canvas = document.getElementById('snakeCanvas');
+            const ctx = canvas.getContext('2d');
+            let box = 20;
+            let snake = [{x: 9 * box, y: 10 * box}];
+            let d;
+            
+            document.addEventListener("keydown", (e) => {
+                if(e.keyCode == 37 && d != "RIGHT") d = "LEFT";
+                if(e.keyCode == 38 && d != "DOWN") d = "UP";
+                if(e.keyCode == 39 && d != "LEFT") d = "RIGHT";
+                if(e.keyCode == 40 && d != "UP") d = "DOWN";
+            });
+
+            function draw() {
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                for(let i=0; i<snake.length; i++) {
+                    ctx.fillStyle = "#0fa";
+                    ctx.fillRect(snake[i].x, snake[i].y, box, box);
+                }
+                let snakeX = snake[0].x;
+                let snakeY = snake[0].y;
+                if(d == "LEFT") snakeX -= box;
+                if(d == "UP") snakeY -= box;
+                if(d == "RIGHT") snakeX += box;
+                if(d == "DOWN") snakeY += box;
+                let newHead = {x: snakeX, y: snakeY};
+                snake.unshift(newHead);
+                snake.pop();
+            }
+            setInterval(draw, 100);
+        }
+    </script>
 </body>
 </html>
