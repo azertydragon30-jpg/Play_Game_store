@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Game Store | Votre Univers Gaming</title>
+    <title>Play Game Store | Accueil</title>
     <style>
         /* RESET & BASE */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0d0d1a; color: #fff; overflow-x: hidden; }
+        body { background-color: #0d0d1a; color: #fff; overflow-x: hidden; scroll-behavior: smooth; }
 
         /* EFFETS DE LUMIÈRE NÉON */
         .neon-text {
@@ -18,44 +18,103 @@
         }
 
         header {
-            height: 15vh;
+            height: 20vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             border-bottom: 2px solid #0fa;
             box-shadow: 0 0 15px #0fa;
+            background: linear-gradient(to bottom, #1a1a2e, #0d0d1a);
         }
 
-        /* ZONE DE JEU */
-        #game-container {
+        /* SECTION ACCUEIL */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            color: #f0f;
+            text-shadow: 0 0 10px #f0f;
+            font-size: 2rem;
+        }
+
+        /* GRILLE DES JEUX */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .game-card {
+            background: #16213e;
+            border: 2px solid #0fa;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 25px #0fa;
+        }
+
+        .game-card h3 {
+            margin: 15px 0;
+            color: #fff;
+        }
+
+        .game-thumb {
+            width: 100%;
+            height: 150px;
+            background: #000;
+            border-radius: 10px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 70vh;
-            padding: 20px;
+            font-size: 3rem;
         }
 
-        canvas {
-            background-color: #000;
-            border: 3px solid #f0f;
-            box-shadow: 0 0 20px #f0f;
-            max-width: 100%;
-        }
-
-        .controls {
-            margin-top: 20px;
-            color: #0fa;
-            font-style: italic;
+        /* SECTION CLASSEMENT (Placeholder) */
+        .leaderboard-preview {
+            background: rgba(255, 0, 255, 0.05);
+            border: 1px dashed #f0f;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
         }
 
         footer {
-            height: 15vh;
+            margin-top: 50px;
+            padding: 40px;
             text-align: center;
-            padding: 20px;
-            font-size: 0.8rem;
+            border-top: 1px solid #333;
             color: #555;
+        }
+
+        .btn-play {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #0fa;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .btn-play:hover {
+            background: #fff;
+            box-shadow: 0 0 10px #fff;
         }
     </style>
 </head>
@@ -66,57 +125,47 @@
         <p>Le carrefour de vos aventures numériques</p>
     </header>
 
-    <main id="game-container">
-        <canvas id="gameCanvas" width="600" height="400"></canvas>
-        <div class="controls">
-            Utilisez les flèches du clavier pour déplacer le bloc !
-        </div>
+    <main class="container">
+        
+        <section id="trending">
+            <h2>🔥 Jeux du moment</h2>
+            <div class="games-grid">
+                <div class="game-card">
+                    <div class="game-thumb">🚀</div>
+                    <h3>Neon Runner</h3>
+                    <p>Esquivez les obstacles dans l'espace.</p>
+                    <a href="#" class="btn-play">JOUER</a>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-thumb">🐍</div>
+                    <h3>Cyber Snake</h3>
+                    <p>Le classique revisité version néon.</p>
+                    <a href="#" class="btn-play">JOUER</a>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-thumb">🛡️</div>
+                    <h3>Pixel Quest</h3>
+                    <p>Une aventure épique en 8-bit.</p>
+                    <a href="#" class="btn-play">JOUER</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="leaderboard">
+            <h2>🏆 Classement Mondial</h2>
+            <div class="leaderboard-preview">
+                <p>Le système de classement sera bientôt disponible...</p>
+                <p style="font-size: 0.9rem; margin-top: 10px; color: #aaa;">Préparez-vous à affronter les meilleurs joueurs !</p>
+            </div>
+        </section>
+
     </main>
 
     <footer>
         &copy; 2026 Play Game Store - Tous droits réservés.
     </footer>
 
-    <script>
-        // LOGIQUE DU JEU (Initialisation)
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-
-        // Variables de notre premier bloc interactif
-        let player = {
-            x: 280,
-            y: 180,
-            size: 40,
-            color: '#0fa',
-            speed: 5
-        };
-
-        function drawPlayer() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Efface l'écran
-            ctx.fillStyle = player.color;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = player.color;
-            ctx.fillRect(player.x, player.y, player.size, player.size);
-        }
-
-        function update() {
-            drawPlayer();
-            requestAnimationFrame(update);
-        }
-
-        // Écouteur de touches
-        window.addEventListener('keydown', (e) => {
-            if(e.key === 'ArrowUp') player.y -= player.speed;
-            if(e.key === 'ArrowDown') player.y += player.speed;
-            if(e.key === 'ArrowLeft') player.x -= player.speed;
-            if(e.key === 'ArrowRight') player.x += player.speed;
-
-            // Limites du canvas
-            player.x = Math.max(0, Math.min(canvas.width - player.size, player.x));
-            player.y = Math.max(0, Math.min(canvas.height - player.size, player.y));
-        });
-
-        update();
-    </script>
 </body>
 </html>
