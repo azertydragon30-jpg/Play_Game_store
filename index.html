@@ -190,15 +190,16 @@
             window.scrollTo({ top: viewport.offsetTop - 50, behavior: 'smooth' });
         }
 
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                viewport.requestFullscreen().catch(err => {
-                    alert(`Erreur: ${err.message}`);
-                });
-            } else {
-                document.exitFullscreen();
-            }
-        }
+       function toggleFullScreen() {
+    const gameArea = document.getElementById('game-viewport');
+    if (!document.fullscreenElement) {
+        gameArea.requestFullscreen().catch(err => {
+            alert(`Erreur : ${err.message}`);
+        });
+    } else {
+        document.exitFullscreen();
+    }
+}
     </script>
 </body>
 </html>
