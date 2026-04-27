@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Game Store | Plateforme Communautaire</title>
+    <title>Play Game Store | Hub de Jeux</title>
     <style>
-        /* STYLE DE BASE (CONSERVÉ) */
+        /* RESET & BASE */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background-color: #0d0d1a; color: #fff; overflow-x: hidden; scroll-behavior: smooth; }
 
@@ -17,14 +17,31 @@
         }
 
         header {
-            height: 15vh;
+            height: 18vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             border-bottom: 2px solid #0fa;
             background: radial-gradient(circle at center, #1a1a2e 0%, #0d0d1a 100%);
+            position: relative;
         }
+
+        /* BOUTON AJOUTER JEU */
+        .add-game-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background: transparent;
+            border: 2px solid #f0f;
+            color: #f0f;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .add-game-btn:hover { background: #f0f; color: #fff; box-shadow: 0 0 15px #f0f; }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
 
@@ -65,7 +82,7 @@
             transition: 0.3s;
         }
 
-        /* GRILLE DYNAMIQUE */
+        /* GRILLE DES JEUX */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -82,7 +99,7 @@
             transition: 0.3s;
         }
 
-        .game-card:hover { border-color: #0fa; transform: translateY(-8px); }
+        .game-card:hover { border-color: #0fa; transform: translateY(-8px); box-shadow: 0 10px 20px rgba(0, 250, 170, 0.2); }
 
         .btn-play {
             display: inline-block;
@@ -102,8 +119,9 @@
 <body>
 
     <header>
+        <a href="ajouter-jeu.html" class="add-game-btn">+ PROPOSER UN JEU</a>
         <h1 class="neon-text">Play Game Store</h1>
-        <p>Explorez les créations de la communauté</p>
+        <p>Le carrefour de vos aventures numériques</p>
     </header>
 
     <main class="container">
@@ -116,46 +134,86 @@
         </section>
 
         <h2>🔥 Catalogue des Jeux</h2>
-        <div class="games-grid" id="main-catalog"></div>
+        <div class="games-grid" id="main-catalog">
+            </div>
     </main>
 
-    <footer>&copy; 2026 Play Game Store</footer>
+    <footer>&copy; 2026 Play Game Store - Communauté Gaming</footer>
 
     <script>
-        // 1. LA LISTE DES JEUX (On conserve tes jeux actuels)
-      // 1. CHARGEMENT DU CATALOGUE
-function getFullCatalog() {
-    // Jeux par défaut (ceux que tu as déjà mis)
-    const defaultGames = [
-        { title: "Neon Strike", author: "LeCyberCreateur", url: "https://lecybercreateur.github.io/Neon-Strike.html/", icon: "⚡" },
-        { title: "Cyber Snake", author: "Toi", url: "snake.html", icon: "🐍" },
-        { title: "Neon Brick", author: "Toi", url: "brick.html", icon: "🧱" }
-    ];
+        // 1. FONCTION POUR RÉCUPÉRER TOUS LES JEUX
+        function getFullCatalog() {
+            // Jeux par défaut
+            const defaultGames = [
+                {
+                    title: "Neon Strike",
+                    author: "LeCyberCreateur",
+                    url: "https://lecybercreateur.github.io/Neon-Strike.html/",
+                    icon: "⚡"
+                },
+                {
+                    title: "Cyber Snake",
+                    author: "Toi",
+                    url: "snake.html",
+                    icon: "🐍"
+                },
+                {
+                    title: "Neon Brick",
+                    author: "Toi",
+                    url: "brick.html",
+                    icon: "🧱"
+                }
+            ];
 
-    // Récupération des jeux ajoutés par les utilisateurs (stockés dans le navigateur)
-    const savedGames = JSON.parse(localStorage.getItem('communityGames')) || [];
-    
-    return [...defaultGames, ...savedGames];
-}
+            // Jeux ajoutés via le formulaire (LocalStorage)
+            const savedGames = JSON.parse(localStorage.getItem('communityGames')) || [];
+            
+            return [...defaultGames, ...savedGames];
+        }
 
-function displayGames() {
-    const grid = document.getElementById('main-catalog');
-    grid.innerHTML = ""; 
+        // 2. FONCTION POUR GÉNÉRER LE CATALOGUE DANS LE HTML
+        function displayGames() {
+            const grid = document.getElementById('main-catalog');
+            if(!grid) return;
 
-    const catalog = getFullCatalog(); // On récupère la liste complète
+            grid.innerHTML = ""; // On nettoie avant d'afficher
+            const catalog = getFullCatalog();
 
-    catalog.forEach(game => {
-        const card = document.createElement('div');
-        card.className = 'game-card';
-        card.innerHTML = `
-            <div style="font-size: 3rem; margin-bottom: 10px;">${game.icon}</div>
-            <h3>${game.title}</h3>
-            <p>Par ${game.author}</p>
-            <div class="btn-play" onclick="loadGame('${game.url}', '${game.title}')">LANCER</div>
-        `;
-        grid.appendChild(card);
-    });
-}
+            catalog.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerHTML = `
+                    <div style="font-size: 3rem; margin-bottom: 10px;">${game.icon}</div>
+                    <h3>${game.title}</h3>
+                    <p>Par ${game.author}</p>
+                    <div class="btn-play" onclick="loadGame('${game.url}', '${game.title}')">LANCER</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 3. LOGIQUE DU VIEWPORT
+        const viewport = document.getElementById('game-viewport');
+        const gameContent = document.getElementById('game-content');
+        const gameTitle = document.getElementById('current-game-title');
+
+        function loadGame(url, title) {
+            viewport.style.display = 'block';
+            gameTitle.innerText = title;
+            gameContent.innerHTML = `<iframe src="${url}" id="game-frame" allowfullscreen="true"></iframe>`;
+            window.scrollTo({ top: viewport.offsetTop - 50, behavior: 'smooth' });
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                viewport.requestFullscreen().catch(err => console.log(err));
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // LANCEMENT AUTOMATIQUE
+        window.onload = displayGames;
     </script>
 </body>
 </html>
