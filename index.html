@@ -123,67 +123,39 @@
 
     <script>
         // 1. LA LISTE DES JEUX (On conserve tes jeux actuels)
-        const catalog = [
-            {
-                title: "Neon Strike",
-                author: "LeCyberCreateur",
-                url: "https://lecybercreateur.github.io/Neon-Strike.html/",
-                icon: "⚡"
-            },
-            {
-                title: "Cyber Snake",
-                author: "Toi",
-                url: "snake.html",
-                icon: "🐍"
-            },
-            {
-                title: "Neon Brick",
-                author: "Toi",
-                url: "brick.html",
-                icon: "🧱"
-            }
-        ];
+      // 1. CHARGEMENT DU CATALOGUE
+function getFullCatalog() {
+    // Jeux par défaut (ceux que tu as déjà mis)
+    const defaultGames = [
+        { title: "Neon Strike", author: "LeCyberCreateur", url: "https://lecybercreateur.github.io/Neon-Strike.html/", icon: "⚡" },
+        { title: "Cyber Snake", author: "Toi", url: "snake.html", icon: "🐍" },
+        { title: "Neon Brick", author: "Toi", url: "brick.html", icon: "🧱" }
+    ];
 
-        // 2. FONCTION POUR AFFICHER LE CATALOGUE
-        function displayGames() {
-            const grid = document.getElementById('main-catalog');
-            grid.innerHTML = ""; // Vide la grille
+    // Récupération des jeux ajoutés par les utilisateurs (stockés dans le navigateur)
+    const savedGames = JSON.parse(localStorage.getItem('communityGames')) || [];
+    
+    return [...defaultGames, ...savedGames];
+}
 
-            catalog.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.innerHTML = `
-                    <div style="font-size: 3rem; margin-bottom: 10px;">${game.icon}</div>
-                    <h3>${game.title}</h3>
-                    <p>Par ${game.author}</p>
-                    <div class="btn-play" onclick="loadGame('${game.url}', '${game.title}')">LANCER</div>
-                `;
-                grid.appendChild(card);
-            });
-        }
+function displayGames() {
+    const grid = document.getElementById('main-catalog');
+    grid.innerHTML = ""; 
 
-        // 3. LOGIQUE DU VIEWPORT
-        const viewport = document.getElementById('game-viewport');
-        const gameContent = document.getElementById('game-content');
-        const gameTitle = document.getElementById('current-game-title');
+    const catalog = getFullCatalog(); // On récupère la liste complète
 
-        function loadGame(url, title) {
-            viewport.style.display = 'block';
-            gameTitle.innerText = title;
-            gameContent.innerHTML = `<iframe src="${url}" id="game-frame" allowfullscreen="true"></iframe>`;
-            window.scrollTo({ top: viewport.offsetTop - 50, behavior: 'smooth' });
-        }
-
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                viewport.requestFullscreen().catch(err => console.error(err));
-            } else {
-                document.exitFullscreen();
-            }
-        }
-
-        // Lancer l'affichage au chargement
-        displayGames();
+    catalog.forEach(game => {
+        const card = document.createElement('div');
+        card.className = 'game-card';
+        card.innerHTML = `
+            <div style="font-size: 3rem; margin-bottom: 10px;">${game.icon}</div>
+            <h3>${game.title}</h3>
+            <p>Par ${game.author}</p>
+            <div class="btn-play" onclick="loadGame('${game.url}', '${game.title}')">LANCER</div>
+        `;
+        grid.appendChild(card);
+    });
+}
     </script>
 </body>
 </html>
