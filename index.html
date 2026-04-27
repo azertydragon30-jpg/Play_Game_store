@@ -34,7 +34,7 @@
             padding: 20px;
         }
 
-        /* ZONE DE JEU PRINCIPALE (L'ÉCRAN DE JEU) */
+        /* ZONE DE JEU PRINCIPALE */
         #game-viewport {
             width: 100%;
             max-width: 900px;
@@ -49,9 +49,13 @@
             animation: fadeIn 0.5s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Correction importante pour le plein écran */
+        #game-viewport:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            max-width: none;
+            border: none;
+            border-radius: 0;
         }
 
         iframe {
@@ -59,6 +63,11 @@
             height: 600px;
             border: none;
             display: block;
+        }
+
+        /* Ajustement de l'iframe en plein écran */
+        #game-viewport:fullscreen iframe {
+            height: calc(100vh - 60px);
         }
 
         .game-controls {
@@ -70,7 +79,6 @@
             border-top: 2px solid #0fa;
         }
 
-        /* BOUTONS */
         .fullscreen-btn {
             background: #f0f;
             color: white;
@@ -85,7 +93,6 @@
         }
         .fullscreen-btn:hover { background: #fff; color: #f0f; box-shadow: 0 0 20px #fff; }
 
-        /* GRILLE DES JEUX */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -102,11 +109,7 @@
             transition: 0.3s;
         }
 
-        .game-card:hover { 
-            border-color: #0fa; 
-            transform: translateY(-8px);
-            box-shadow: 0 10px 20px rgba(0, 250, 170, 0.2);
-        }
+        .game-card:hover { border-color: #0fa; transform: translateY(-8px); }
 
         .btn-play {
             display: inline-block;
@@ -118,11 +121,9 @@
             font-weight: bold;
             border-radius: 5px;
             cursor: pointer;
-            transition: 0.2s;
         }
-        .btn-play:hover { background: #fff; transform: scale(1.05); }
 
-        footer { text-align: center; padding: 60px 20px; color: #444; font-size: 0.9rem; }
+        footer { text-align: center; padding: 60px 20px; color: #444; }
     </style>
 </head>
 <body>
@@ -133,46 +134,31 @@
     </header>
 
     <main class="container">
-
         <section id="game-viewport">
-            <div id="game-content">
-                </div>
+            <div id="game-content"></div>
             <div class="game-controls">
-                <span id="current-game-title" style="font-weight: bold; color: #0fa;">PRÊT À JOUER ?</span>
+                <span id="current-game-title" style="font-weight: bold; color: #0fa;">SÉLECTIONNEZ UN JEU</span>
                 <button class="fullscreen-btn" onclick="toggleFullScreen()">PLEIN ÉCRAN ⛶</button>
             </div>
         </section>
 
         <h2>🔥 Les hits du moment</h2>
         <div class="games-grid">
-            
             <div class="game-card">
-                <div style="font-size: 3rem; margin-bottom: 10px;">⚡</div>
                 <h3>Neon Strike</h3>
                 <p>Par LeCyberCreateur</p>
                 <div class="btn-play" onclick="loadGame('https://lecybercreateur.github.io/Neon-Strike.html/', 'Neon Strike')">LANCER</div>
             </div>
 
             <div class="game-card">
-                <div style="font-size: 3rem; margin-bottom: 10px;">🐍</div>
                 <h3>Cyber Snake</h3>
-                <p>Nouveau Mode Amélioré</p>
+                <p>Version Corrigée</p>
                 <div class="btn-play" onclick="loadGame('snake.html', 'Cyber Snake')">LANCER</div>
             </div>
-
-            <div class="game-card" style="opacity: 0.6;">
-                <div style="font-size: 3rem; margin-bottom: 10px;">🛡️</div>
-                <h3>Prochain Défi</h3>
-                <p>Arrive bientôt...</p>
-                <div class="btn-play" style="background: #333; cursor: default;">BIENTÔT</div>
-            </div>
         </div>
-
     </main>
 
-    <footer>
-        &copy; 2026 Play Game Store - Développé par la communauté.
-    </footer>
+    <footer>&copy; 2026 Play Game Store</footer>
 
     <script>
         const viewport = document.getElementById('game-viewport');
@@ -183,23 +169,31 @@
             viewport.style.display = 'block';
             gameTitle.innerText = title;
             
-            // On utilise systématiquement une iframe
-            gameContent.innerHTML = `<iframe src="${url}" id="game-frame" allowfullscreen></iframe>`;
+            // AJOUT DE allowfullscreen POUR L'IFRAME
+            gameContent.innerHTML = `<iframe src="${url}" id="game-frame" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>`;
             
-            // Scroll fluide vers la zone de jeu
             window.scrollTo({ top: viewport.offsetTop - 50, behavior: 'smooth' });
         }
 
-       function toggleFullScreen() {
-    const gameArea = document.getElementById('game-viewport');
-    if (!document.fullscreenElement) {
-        gameArea.requestFullscreen().catch(err => {
-            alert(`Erreur : ${err.message}`);
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                // On demande le plein écran sur le CONTENEUR (viewport)
+                // pour garder les contrôles (titre et bouton quitter) visibles ou non
+                viewport.requestFullscreen().catch(err => {
+                    console.error(`Erreur : ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Optionnel : Ajuster la taille de l'iframe quand on change de mode
+        document.addEventListener('fullscreenchange', () => {
+            const frame = document.getElementById('game-frame');
+            if (frame) {
+                frame.style.height = document.fullscreenElement ? "90vh" : "600px";
+            }
         });
-    } else {
-        document.exitFullscreen();
-    }
-}
     </script>
 </body>
 </html>
