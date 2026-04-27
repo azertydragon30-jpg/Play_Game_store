@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposer un Jeu | Play Game Store</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #0d0d1a; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+
+        .form-container {
+            background: #16213e;
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #0fa;
+            box-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 { color: #0fa; margin-bottom: 20px; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
+
+        .field { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #ccc; font-size: 0.9rem; }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: #0d0d1a;
+            border: 1px solid #333;
+            border-radius: 5px;
+            color: #fff;
+            outline: none;
+        }
+
+        input:focus { border-color: #f0f; box-shadow: 0 0 10px rgba(255, 0, 255, 0.3); }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #0fa;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover { background: #fff; transform: scale(1.02); }
+
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #f0f; text-decoration: none; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Proposer un Jeu</h2>
+        <form id="uploadForm">
+            <div class="field">
+                <label>Nom du Jeu</label>
+                <input type="text" id="gameTitle" placeholder="Ex: Space Adventure" required>
+            </div>
+            <div class="field">
+                <label>Ton Pseudo</label>
+                <input type="text" id="gameAuthor" placeholder="Ex: PlayerOne" required>
+            </div>
+            <div class="field">
+                <label>Lien du Jeu (URL GitHub Pages ou .html)</label>
+                <input type="url" id="gameUrl" placeholder="https://..." required>
+            </div>
+            <div class="field">
+                <label>Choisir une Icône</label>
+                <select id="gameIcon">
+                    <option value="🎮">Manette (🎮)</option>
+                    <option value="🚀">Fusée (🚀)</option>
+                    <option value="💎">Diamant (💎)</option>
+                    <option value="🔥">Feu (🔥)</option>
+                    <option value="👾">Alien (👾)</option>
+                </select>
+            </div>
+            <button type="submit" class="submit-btn">Publier sur le Store</button>
+        </form>
+        <a href="index.html" class="back-link">← Retour au Store</a>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Récupération des données
+            const newGame = {
+                title: document.getElementById('gameTitle').value,
+                author: document.getElementById('gameAuthor').value,
+                url: document.getElementById('gameUrl').value,
+                icon: document.getElementById('gameIcon').value
+            };
+
+            // Pour l'instant, on simule l'enregistrement en local (LocalStorage)
+            let communityGames = JSON.parse(localStorage.getItem('communityGames')) || [];
+            communityGames.push(newGame);
+            localStorage.setItem('communityGames', JSON.stringify(communityGames));
+
+            alert("Jeu envoyé avec succès ! Il apparaîtra sur ton Store.");
+            window.location.href = "index.html";
+        });
+    </script>
+</body>
+</html>
